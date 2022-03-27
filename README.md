@@ -11,7 +11,7 @@ This is a webite with a quiz to test out JS fundamentals. It has a timmer and hi
 -[Live](https://juanestuniga.github.io/web-quiz/) 
 
 ## Screenshots
-![Video](assets/images/screen-quiz.mov)
+![Gif](assets/images/screen-quiz.gif)
 
 ## Built With
 -HTML 
