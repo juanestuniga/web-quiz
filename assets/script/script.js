@@ -94,4 +94,19 @@ let quizArray = [
       correct: 0,
     },
   ];
-  
+  /* ------------- Events Listeners ------------- */
+
+startBtn.addEventListener("click", startQuiz);
+answersDiv.addEventListener("click", assesSelection);
+submit.addEventListener("click", addToHighscores);
+clearHighscoresBtn.addEventListener("click", clearHighscores);
+$("#staticBackdrop").on("shown.bs.modal", function (e) {
+  loadHighScores();
+});
+$("#staticBackdrop").on("hidden.bs.modal", function (e) {
+  if (justRegistered) {
+    init();
+  }
+});
+
+init();
