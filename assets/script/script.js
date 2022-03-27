@@ -338,3 +338,134 @@ function initate() {
       removeQuestionsButtons();
     }, 5000);
   }
+  function addToHighscores() {
+    var highScoreElement = document.createElement("li");
+    var highscoreStr = initials.value + " - " + correctScore;
+    localHighscoresArray.push(highscoreStr);
+    var highscoreArrayStr = localHighscoresArray.toString();
+    highScoreElement.textContent = highscoreStr;
+    highScoresList.append(highScoreElement);
+    localStorage.setItem("highscore", localHighscoresArray);
+    justRegistered = true;
+    initials.value = "";
+    // Modal
+    $("#staticBackdrop").modal("show");
+  }
+  
+  function loadHighScores() {
+    var tempHighscoresArray = [];
+    var tempHighscoresObject = {};
+    var tempHighscoresObjectsArray = [];
+    var tempLocalSCoreArray = [];
+    while (highScoresList.hasChildNodes()) {
+      highScoresList.removeChild(highScoresList.childNodes[0]);
+    }
+    var lastPos;
+    var lastChar = "";
+    var localScore = 0;
+    var localStrScore = "";
+    var tempHighscore = "";
+    for (i = 0; i < localHighscoresArray.length; i++) {
+      for (j = localHighscoresArray[i].length - 1; j >= 0; j--) {
+        lastPos = localHighscoresArray[i].length - 1;
+        lastChar = localHighscoresArray[i][lastPos - j];
+        if (lastChar && lastChar >= 0 && lastChar <= 9) {
+          localScore += lastChar;
+        }
+        if (j > 1) {
+          if (j === 2 && lastChar === "1") {
+          }
+          localStrScore += lastChar;
+        }
+  
+        localScore = parseInt(localScore);
+      }
+  
+      tempHighscore = localScore + localStrScore;
+      tempHighscoresArray.push(tempHighscore);
+      tempHighscoresObject.score = localScore;
+      tempHighscoresObject.scoreStr = localStrScore;
+  
+      tempHighscoresObjectsArray.push(tempHighscoresObject);
+      tempLocalSCoreArray.push(localScore);
+      localScore = 0;
+      localStrScore = "";
+      tempHighscoresObject = {};
+    }
+    tempLocalSCoreArray.sort(function (a, b) {
+      return b - a;
+    });
+    var sortedScoresCompleteArray = [];
+    var flagged = [];
+    tempLocalSCoreArray.forEach(function (element) {
+      tempHighscoresObjectsArray.forEach(function (object, index) {
+        if (element === object.score && !flagged.includes(index)) {
+          flagged.push(index);
+  
+          var tempScoreString = object.scoreStr + " " + object.score;
+          sortedScoresCompleteArray.push(tempScoreString);
+        }
+      });
+    });
+    for (i = 0; i < sortedScoresCompleteArray.length; i++) {
+      var highScoreElement = document.createElement("li");
+      highScoreElement.textContent = sortedScoresCompleteArray[i];
+      for (j = sortedScoresCompleteArray[i].length - 1; j >= 0; j--) {
+        lastPos = sortedScoresCompleteArray[i].length - 1;
+        lastChar = sortedScoresCompleteArray[i][lastPos - j];
+        if (lastChar && lastChar >= 0 && lastChar <= 9) {
+          localScore += lastChar;
+        }
+        if (j > 1) {
+          localStrScore += lastChar;
+        }
+  
+        localScore = parseInt(localScore);
+      }
+  
+      tempHighscore = localScore + localStrScore;
+  
+      if (localScore > 80 && localScore <= 100) {
+        highScoreElement.setAttribute(
+          "class",
+          "list-group-item list-group-item-success"
+        );
+      } else if (localScore > 70 && localScore <= 80) {
+        highScoreElement.setAttribute(
+          "class",
+          "list-group-item list-group-item-info"
+        );
+      } else if (localScore > 60 && localScore <= 70) {
+        highScoreElement.setAttribute(
+          "class",
+          "list-group-item list-group-item-primary"
+        );
+      } else if (localScore > 50 && localScore <= 60) {
+        highScoreElement.setAttribute(
+          "class",
+          "list-group-item list-group-item-warning"
+        );
+      } else if (localScore <= 50) {
+        highScoreElement.setAttribute(
+          "class",
+          "list-group-item list-group-item-danger"
+        );
+      }
+  
+      highScoresList.append(highScoreElement);
+      tempHighscoresArray.push(tempHighscore);
+      tempHighscoresObject.score = localScore;
+      tempHighscoresObject.scoreStr = localStrScore;
+      tempHighscoresObjectsArray.push(tempHighscoresObject);
+      tempLocalSCoreArray.push(localScore);
+      localScore = 0;
+      localStrScore = "";
+      tempHighscoresObject = {};
+    }
+  }
+  
+  function clearHighscores() {
+    localHighscoresArray = [];
+    localStorage.setItem("highscore", localHighscoresArray);
+    loadHighScores();
+  }
